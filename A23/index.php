@@ -40,8 +40,23 @@ if(!isset($_SESSION['name'])){
 	    		?>
 
 	    		<?php
-
-	    		$stmt = $pdo->query("SELECT auto_id, make, year,mileage FROM autos");
+					$sql="SELECT auto_id, make, year,mileage FROM autos ";
+					if(isset($_SESSION['marca']) || isset($_SESSION['ano']) || isset($_SESSION['km'])){
+						$sql.="WHERE ";
+					}
+					if(isset($_SESSION['marca'])){
+						$sql.=" make like '%".$_SESSION['marca']."%' ";
+						unset($_SESSION['marca']);
+					}
+					if(isset($_SESSION['ano'])){
+						$sql.=" year like '%".$_SESSION['ano']."%' ";
+						unset($_SESSION['ano']);
+					}
+					if(isset($_SESSION['km'])){
+						$sql.=" mileage like '%".$_SESSION['km']."%' ";
+						unset($_SESSION['km']);
+					}
+	    		$stmt = $pdo->query($sql);
 					$numfilas=$stmt->rowCount();
 	    		echo '<table border="1">'."\n";
 	    		echo "<tr><th>Marca</th><th>A&ntilde;o</th><th>Kil&oacute;metros</th><th>Action</th></tr>";
@@ -63,6 +78,7 @@ if(!isset($_SESSION['name'])){
 				}
 	    		echo "</table>\n";?>
 	        <button type="button" name="nuevo" onclick="window.location.href='add.php'">Nuevo</button>
+					<button type="button" name="search" onclick="window.location.href='search.php'">Search</button>
 	        <button type="button" name="cancelar" onclick="window.location.href='index.php'">Cancelar</button>
 	        <button type="button" name="logout" onclick="window.location.href='logout.php'">Logout</button>
 	    	</body>
